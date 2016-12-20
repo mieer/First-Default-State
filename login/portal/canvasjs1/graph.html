@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+
+<title>graph</title>
+
+<script src=”jquery.js”></script>
+<script src=”canvasjs.js”></script>
+
+<script type=”text/javascript”>
+var updateInterval = 100;
+var dps;
+$(document).ready(function () {
+
+$.getJSON(“data.php”, function (result) {
+dps = result;
+var chart = new CanvasJS.Chart(“chartContainer”, {
+title:{
+text: “Patient #01”,
+},
+axisY:{
+minimum: 0,
+maximum: 100
+},
+data: [
+
+{
+type: “stackedBar”,
+dataPoints: dps
+
+}
+
+]
+
+});
+
+chart.render();
+
+});
+
+var updateChart = function () {
+$.getJSON(“data.php”, function (result) {
+
+dps.splice(0, dps.length);
+
+$.each(result, function (index, value) {
+dps.push(value);
+});
+});
+
+chart.render();
+};
+
+setInterval(function(){updateChart()}, updateInterval);
+
+});
+
+</script>
+
+</head>
+
+<body>
+
+<div id=”chartContainer” style=”height: 300px; width: 100%;”>
+
+</body>
+
+</html>

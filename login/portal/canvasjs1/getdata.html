@@ -1,0 +1,52 @@
+<html>
+<head>
+<script>
+// Wij creëren een lege array
+
+$myDataPoints = array();
+
+// Gebruik de volgende variabele $connection...
+
+$connection = mysqli_connect("localhost","root","","WebApplication");
+
+// of de volgende regel toe aan de variabele eerder door u aan te passen
+
+$rawData = mysqli_query($connection, "SELECT * FROM info");
+
+// Laat de Loop voor elke lijn van query resultaten
+
+while($row = mysqli_fetch_array($rawData))
+{
+
+/* We berekenen de datum . In het voorbeeld , lijkt het erop dat alleen de tijd zou variëren
+aftrekken van 1 uur bij elke regel nummer . Deze methode werkt alleen als uw
+data tabel heeft minder dan 25 lijnen */
+
+$fetch = date(DATE_ATOM, mktime($row - 1, 0, 0, 1, 1, 2012));
+
+// We maken het object... 
+
+$point = array("x" => $fetch , "y" => $row['invertir']);
+
+// ... en stuurde het naar de array 
+
+array_push($myDataPoints, $point);
+
+echo 'var myDataPoints = '.json_encode($myDataPoints).';';
+
+}
+
+
+//This approach generates an JSON array (myDataPoints) that you can easily use in a normal canvasjs call:
+
+var chart = new CanvasJS.Chart("chartContainer", {
+                    data: [
+                        {
+                            dataPoints: myDataPoints
+                        }
+                    ]
+                }); 
+</script>
+</head>                
+<body></body>
+</html>
